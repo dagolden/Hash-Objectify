@@ -10,7 +10,7 @@ can_ok("main", 'objectify');
 
 my $obj = objectify { foo => 'bar', baz => 'bam' };
 
-like( ref $obj, qr/Objectified/, "C<objectify HASH> returns object" );
+like( ref $obj, qr/Objectified/, "C<objectify HASHREF> returns object" );
 
 is( $obj->foo, 'bar', "foo accessor reads" );
 $obj->foo("wibble");
@@ -26,6 +26,17 @@ like(
   "unknown accessor throws exception"
 );
 
+my $obj2 = objectify foo => 'bar', baz => 'bam';
+
+like( ref $obj2, qr/Objectified/, "C<objectify LIST> returns object" );
+
+isnt( ref $obj, ref $obj2, "objectified objects from different spots are different classes" );
+
+for my $key ( qw/foo baz/ ) {
+  can_ok( $obj2, $key );
+}
+
+# XXX what should objectify $obj do?
 
 done_testing;
 # COPYRIGHT

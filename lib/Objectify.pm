@@ -9,13 +9,26 @@ package Objectify;
 use Class::XSAccessor;
 use Sub::Install;
 
+my %CACHE;
+my $COUNTER = 0;
 
 sub import {
   my ($class) = @_;
-  my ($caller, $file, $line) = caller;
+  my $caller = caller;
 
   Sub::Install::install_sub({
-    code => sub { bless $_[0], 'Objectified::HASH' },
+    code => sub {
+      my $hr = ref $_[0] eq 'HASH' ? $_[0] : { @_ };
+      my ($caller, undef, $line) = caller;
+      my $cachekey = join "", keys %$hr;
+      if ( ! defined $CACHE{$caller}{$line}{$cachekey} ) {
+        my $package = $CACHE{$caller}{$line}{$cachekey} = "Objectified::HASH$COUNTER";
+        $COUNTER++;
+        no strict 'refs';
+        @{$package . '::ISA'} = 'Objectified';
+      }
+      bless $hr, $CACHE{$caller}{$line}{$cachekey};
+    },
     into => $caller,
     as   => 'objectify',
   });
@@ -49,9 +62,6 @@ sub AUTOLOAD {
 }
 
 sub DESTROY {} # because we AUTOLOAD, we need this too
-
-package Objectified::HASH;
-our @ISA = qw/Objectified/;
 
 1;
 
