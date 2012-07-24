@@ -11,5 +11,7 @@ my $obj = objectify { foo => 'bar', baz => 'bam' };
 
 like( ref $obj, qr/Objectified/, "C<objectify HASH> returns object" );
 
+can_ok( $obj, qw/foo baz/ );
+
 done_testing;
 # COPYRIGHT

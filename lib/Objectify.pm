@@ -21,6 +21,17 @@ sub import {
 
 package Objectified;
 
+sub can {
+  return ref $_[0] && exists $_[0]->{$_[1]};
+}
+
+sub AUTOLOAD {
+  
+}
+
+package Objectified::HASH;
+our @ISA = qw/Objectified/;
+
 1;
 
 =for Pod::Coverage method_names_here
