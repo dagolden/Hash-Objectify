@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300020, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300018, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "apache_2_0"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Objectify",
+   "name" : "Hash-Objectify",
    "no_index" : {
       "directory" : [
          "t",
@@ -51,26 +51,26 @@
       }
    },
    "provides" : {
-      "Objectified" : {
-         "file" : "lib/Objectify.pm",
+      "Hash::Objectified" : {
+         "file" : "lib/Hash/Objectify.pm",
          "version" : "0.001"
       },
-      "Objectify" : {
-         "file" : "lib/Objectify.pm",
+      "Hash::Objectify" : {
+         "file" : "lib/Hash/Objectify.pm",
          "version" : "0.001"
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "bug-objectify at rt.cpan.org",
-         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=Objectify"
+         "mailto" : "bug-hash-objectify at rt.cpan.org",
+         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=Hash-Objectify"
       },
-      "homepage" : "https://github.com/dagolden/objectify",
+      "homepage" : "https://github.com/dagolden/hash-objectify",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/dagolden/objectify.git",
-         "web" : "https://github.com/dagolden/objectify"
+         "url" : "https://github.com/dagolden/hash-objectify.git",
+         "web" : "https://github.com/dagolden/hash-objectify"
       }
    },
    "version" : "0.001"

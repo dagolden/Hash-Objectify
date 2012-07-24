@@ -4,7 +4,7 @@ use warnings;
 use Test::More 0.96;
 use Test::Fatal;
 
-use Objectify;
+use Hash::Objectify;
 
 my $obj1 = bless {}, "Foo";
 

@@ -6,7 +6,7 @@ use Test::Fatal;
 use Scalar::Util qw/blessed/;
 
 # load and API test
-use Objectify;
+use Hash::Objectify;
 
 can_ok("main", 'objectify');
 
@@ -14,7 +14,7 @@ can_ok("main", 'objectify');
 
 my $obj = objectify { foo => 'bar', baz => 'bam' };
 
-like( ref $obj, qr/Objectified/, "C<objectify HASHREF> returns object" );
+like( ref $obj, qr/Hash::Objectified/, "C<objectify HASHREF> returns object" );
 
 is( $obj->foo, 'bar', "foo accessor reads" );
 $obj->foo("wibble");
@@ -36,7 +36,7 @@ like(
 
 my $obj2 = objectify { foo => 'bar', baz => 'bam' };
 
-like( ref $obj2, qr/Objectified/, "C<objectify HASHREF> returns object" );
+like( ref $obj2, qr/Hash::Objectified/, "C<objectify HASHREF> returns object" );
 
 isnt( ref $obj, ref $obj2, "objectified objects from different lines are different classes" );
 
@@ -66,7 +66,7 @@ my $obj6 = make_named_obj( foo => 'bar' );
 my $obj7 = make_named_obj( baz => 'bam' );
 is(ref $obj6, 'Wibble', "C<objectify HASHREF, PACKAGE> returns object blessed to PACKAGE");
 is(ref $obj7, 'Wibble', "C<objectify HASHREF, PACKAGE> with different keys is still in PACKAGE");
-ok($obj6->isa("Objectified"), "PACKAGE inherits Objectified");
+ok($obj6->isa("Hash::Objectified"), "PACKAGE inherits Hash::Objectified");
 is($obj6->foo, 'bar', "PACKAGE accessor works");
 
 # reference is copied, not blessed

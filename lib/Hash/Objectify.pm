@@ -2,13 +2,12 @@ use 5.008001;
 use strict;
 use warnings;
 
-package Objectify;
+package Hash::Objectify;
 
 # ABSTRACT: Create objects from hashes on the fly
 # VERSION
 
 use Carp;
-use Class::XSAccessor;
 use Sub::Install;
 use Scalar::Util qw/blessed/;
 
@@ -33,17 +32,17 @@ sub import {
         }
         if ( defined $package ) {
           no strict 'refs';
-          @{ $package . '::ISA' } = 'Objectified'
-            unless $package->isa('Objectified');
+          @{ $package . '::ISA' } = 'Hash::Objectified'
+            unless $package->isa('Hash::Objectified');
         }
         else {
           my ( $caller, undef, $line ) = caller;
           my $cachekey = join "", keys %$ref;
           if ( !defined $CACHE{$caller}{$line}{$cachekey} ) {
             no strict 'refs';
-            $package = $CACHE{$caller}{$line}{$cachekey} = "Objectified::HASH$COUNTER";
+            $package = $CACHE{$caller}{$line}{$cachekey} = "Hash::Objectified$COUNTER";
             $COUNTER++;
-            @{ $package . '::ISA' } = 'Objectified';
+            @{ $package . '::ISA' } = 'Hash::Objectified';
           }
           else {
             $package = $CACHE{$caller}{$line}{$cachekey};
@@ -57,7 +56,9 @@ sub import {
   );
 }
 
-package Objectified;
+package Hash::Objectified;
+
+use Class::XSAccessor;
 
 our $AUTOLOAD;
 
@@ -92,7 +93,7 @@ sub DESTROY { } # because we AUTOLOAD, we need this too
 
 =head1 SYNOPSIS
 
-  use Objectify;
+  use Hash::Objectify;
 
   # turn a hash reference into an object with accessors
   
@@ -106,14 +107,14 @@ sub DESTROY { } # because we AUTOLOAD, we need this too
 
 =head1 DESCRIPTION
 
-C<Objectify> turns a hash reference into a simple object with accessors for each
+Hash::Objectify turns a hash reference into a simple object with accessors for each
 of the keys.
 
 One application of this module could be to create lightweight response objects
 without the extra work of setting up an entire response class with the
 framework of your choice.
 
-Using <Objectify> is slower than accessing the keys of the hash directly, but
+Using <Hash::Objectify> is slower than accessing the keys of the hash directly, but
 does provide "typo protection" since a misspelled method is an error.
 
 =head1 USAGE
@@ -129,7 +130,7 @@ does provide "typo protection" since a misspelled method is an error.
 The C<objectify> function copies the hash reference (shallow copy), and blesses
 it into the given classname.  If no classname is given, a meaningless,
 generated package name is used instead.  In either case, the object will
-inherit from the C<Objectified> class, which generates accessors on
+inherit from the Hash::Objectified class, which generates accessors on
 demand for any key in the hash.
 
 As an optimization, a generated classname will be the same for any given
@@ -142,12 +143,12 @@ Note: deleting a key I<after> calling it as an accessor will not cause subsequen
 calls to throw an exception; the accessor will merely return undef.
 
 Objectifying with a "real" classname that does anything other than inherit from
-C<Objectified> may lead to surprising behaviors from method name conflict.  You
+Hash::Objectified may lead to surprising behaviors from method name conflict.  You
 probably don't want to do that.
 
 Objectifying anything other than an unblessed hash reference is an error.  This
 is true even for objects based on blessed hash references, since the correct
-semantics are not universally obvious.  If you really want C<Objectify> for
+semantics are not universally obvious.  If you really want C<Hash::Objectify> for
 access to the keys of a blessed hash, you should make an explicit, shallow copy:
 
   my $copy = objectified {%$object};
