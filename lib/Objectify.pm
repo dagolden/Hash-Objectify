@@ -13,11 +13,13 @@ sub import {
   my ($caller, $file, $line) = caller;
 
   Sub::Install::install_sub({
-    code => sub { ... },
+    code => sub { bless $_[0], 'Objectified::HASH' },
     into => $caller,
     as   => 'objectify',
   });
 }
+
+package Objectified;
 
 1;
 
