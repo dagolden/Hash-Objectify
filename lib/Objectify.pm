@@ -106,11 +106,15 @@ sub DESTROY { } # because we AUTOLOAD, we need this too
 
 =head1 DESCRIPTION
 
-Objectify turns a hash reference into a simple object with accessors for each
+C<Objectify> turns a hash reference into a simple object with accessors for each
 of the keys.
 
 One application of this module could be to create lightweight response objects
-without the extra work of setting up an entire response class.
+without the extra work of setting up an entire response class with the
+framework of your choice.
+
+Using <Objectify> is slower than accessing the keys of the hash directly, but
+does provide "typo protection" since a misspelled method is an error.
 
 =head1 USAGE
 
@@ -125,7 +129,7 @@ without the extra work of setting up an entire response class.
 The C<objectify> function copies the hash reference (shallow copy), and blesses
 it into the given classname.  If no classname is given, a meaningless,
 generated package name is used instead.  In either case, the object will
-inherit from the C<Objectified> class, which provides generates accessors on
+inherit from the C<Objectified> class, which generates accessors on
 demand for any key in the hash.
 
 As an optimization, a generated classname will be the same for any given
@@ -138,7 +142,7 @@ Note: deleting a key I<after> calling it as an accessor will not cause subsequen
 calls to throw an exception; the accessor will merely return undef.
 
 Objectifying with a "real" classname that does anything other than inherit from
-C<Objectify> may lead to surprising behaviors from method name conflict.  You
+C<Objectified> may lead to surprising behaviors from method name conflict.  You
 probably don't want to do that.
 
 Objectifying anything other than an unblessed hash reference is an error.  This
