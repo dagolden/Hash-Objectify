@@ -148,7 +148,7 @@ probably don't want to do that.
 
 Objectifying anything other than an unblessed hash reference is an error.  This
 is true even for objects based on blessed hash references, since the correct
-semantics are not universally obvious.  If you really want C<Hash::Objectify> for
+semantics are not universally obvious.  If you really want Hash::Objectify for
 access to the keys of a blessed hash, you should make an explicit, shallow copy:
 
   my $copy = objectified {%$object};
