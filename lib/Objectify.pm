@@ -3,11 +3,8 @@ use strict;
 use warnings;
 
 package Objectify;
-# ABSTRACT: No abstract given for Objectify
+# ABSTRACT: Create objects from hashes on the fly
 # VERSION
-
-# Dependencies
-use autodie 2.00;
 
 1;
 
