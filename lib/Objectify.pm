@@ -6,7 +6,9 @@ package Objectify;
 # ABSTRACT: Create objects from hashes on the fly
 # VERSION
 
+use Class::XSAccessor;
 use Sub::Install;
+
 
 sub import {
   my ($class) = @_;
@@ -21,13 +23,32 @@ sub import {
 
 package Objectified;
 
+our $AUTOLOAD;
+
 sub can {
-  return ref $_[0] && exists $_[0]->{$_[1]};
+  my ($self, $key) = @_;
+  $self->$key; # install accessor if not installed
+  return $self->SUPER::can($key);
 }
 
 sub AUTOLOAD {
-  
+  my $self = shift;
+  my $method = $AUTOLOAD;
+  $method =~ s/.*:://;
+  if ( ref $self && exists $self->{$method} ) {
+    Class::XSAccessor->import(
+      accessors => { $method => $method },
+      class => ref $self
+    );
+  }
+  else {
+    my $class = ref $self || $self;
+    die qq{Can't locate object method "$method" via package "$class"};
+  }
+  return $self->$method(@_);
 }
+
+sub DESTROY {} # because we AUTOLOAD, we need this too
 
 package Objectified::HASH;
 our @ISA = qw/Objectified/;
