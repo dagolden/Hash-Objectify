@@ -6,6 +6,19 @@ package Objectify;
 # ABSTRACT: Create objects from hashes on the fly
 # VERSION
 
+use Sub::Install;
+
+sub import {
+  my ($class) = @_;
+  my ($caller, $file, $line) = caller;
+
+  Sub::Install::install_sub({
+    code => sub { ... },
+    into => $caller,
+    as   => 'objectify',
+  });
+}
+
 1;
 
 =for Pod::Coverage method_names_here
