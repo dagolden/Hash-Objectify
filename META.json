@@ -32,6 +32,10 @@
       },
       "runtime" : {
          "requires" : {
+            "Carp" : "0",
+            "Class::XSAccessor" : "0",
+            "Scalar::Util" : "0",
+            "Sub::Install" : "0",
             "perl" : "5.008001",
             "strict" : "0",
             "warnings" : "0"
@@ -41,11 +45,16 @@
          "requires" : {
             "File::Find" : "0",
             "File::Temp" : "0",
-            "Test::More" : "0"
+            "Test::Fatal" : "0",
+            "Test::More" : "0.96"
          }
       }
    },
    "provides" : {
+      "Objectified" : {
+         "file" : "lib/Objectify.pm",
+         "version" : "0.001"
+      },
       "Objectify" : {
          "file" : "lib/Objectify.pm",
          "version" : "0.001"
