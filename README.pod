@@ -1,10 +1,14 @@
+=pod
+
+=encoding utf-8
+
 =head1 NAME
 
 Hash::Objectify - Create objects from hashes on the fly
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -77,7 +81,7 @@ access to the keys of a blessed hash, you should make an explicit, shallow copy:
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<http://rt.cpan.org/Public/Dist/Display.html?Name=Hash-Objectify>.
+at L<https://github.com/dagolden/hash-objectify/issues>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
@@ -87,7 +91,7 @@ public review and contribution under the terms of the license.
 
 L<https://github.com/dagolden/hash-objectify>
 
-  git clone https://github.com/dagolden/hash-objectify.git
+  git clone git://github.com/dagolden/hash-objectify.git
 
 =head1 AUTHOR
 

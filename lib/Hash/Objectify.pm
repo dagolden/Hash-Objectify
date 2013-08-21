@@ -15,45 +15,45 @@ my %CACHE;
 my $COUNTER = 0;
 
 sub import {
-  my ($class) = @_;
-  my $caller = caller;
+    my ($class) = @_;
+    my $caller = caller;
 
-  Sub::Install::install_sub(
-    {
-      code => sub {
-        my ( $ref, $package ) = @_;
-        my $type = ref $ref;
-        unless ( $type eq 'HASH' ) {
-          $type
-            = $type eq '' ? "a scalar value"
-            : blessed($ref) ? "an object of class $type"
-            :                 "a reference of type $type";
-          croak "Error: Can't objectify $type";
+    Sub::Install::install_sub(
+        {
+            code => sub {
+                my ( $ref, $package ) = @_;
+                my $type = ref $ref;
+                unless ( $type eq 'HASH' ) {
+                    $type =
+                        $type eq ''   ? "a scalar value"
+                      : blessed($ref) ? "an object of class $type"
+                      :                 "a reference of type $type";
+                    croak "Error: Can't objectify $type";
+                }
+                if ( defined $package ) {
+                    no strict 'refs';
+                    @{ $package . '::ISA' } = 'Hash::Objectified'
+                      unless $package->isa('Hash::Objectified');
+                }
+                else {
+                    my ( $caller, undef, $line ) = caller;
+                    my $cachekey = join "", keys %$ref;
+                    if ( !defined $CACHE{$caller}{$line}{$cachekey} ) {
+                        no strict 'refs';
+                        $package = $CACHE{$caller}{$line}{$cachekey} = "Hash::Objectified$COUNTER";
+                        $COUNTER++;
+                        @{ $package . '::ISA' } = 'Hash::Objectified';
+                    }
+                    else {
+                        $package = $CACHE{$caller}{$line}{$cachekey};
+                    }
+                }
+                bless {%$ref}, $package;
+            },
+            into => $caller,
+            as   => 'objectify',
         }
-        if ( defined $package ) {
-          no strict 'refs';
-          @{ $package . '::ISA' } = 'Hash::Objectified'
-            unless $package->isa('Hash::Objectified');
-        }
-        else {
-          my ( $caller, undef, $line ) = caller;
-          my $cachekey = join "", keys %$ref;
-          if ( !defined $CACHE{$caller}{$line}{$cachekey} ) {
-            no strict 'refs';
-            $package = $CACHE{$caller}{$line}{$cachekey} = "Hash::Objectified$COUNTER";
-            $COUNTER++;
-            @{ $package . '::ISA' } = 'Hash::Objectified';
-          }
-          else {
-            $package = $CACHE{$caller}{$line}{$cachekey};
-          }
-        }
-        bless {%$ref}, $package;
-      },
-      into => $caller,
-      as   => 'objectify',
-    }
-  );
+    );
 }
 
 package Hash::Objectified;
@@ -63,26 +63,26 @@ use Class::XSAccessor;
 our $AUTOLOAD;
 
 sub can {
-  my ( $self, $key ) = @_;
-  $self->$key; # install accessor if not installed
-  return $self->SUPER::can($key);
+    my ( $self, $key ) = @_;
+    $self->$key; # install accessor if not installed
+    return $self->SUPER::can($key);
 }
 
 sub AUTOLOAD {
-  my $self   = shift;
-  my $method = $AUTOLOAD;
-  $method =~ s/.*:://;
-  if ( ref $self && exists $self->{$method} ) {
-    Class::XSAccessor->import(
-      accessors => { $method => $method },
-      class     => ref $self
-    );
-  }
-  else {
-    my $class = ref $self || $self;
-    die qq{Can't locate object method "$method" via package "$class"};
-  }
-  return $self->$method(@_);
+    my $self   = shift;
+    my $method = $AUTOLOAD;
+    $method =~ s/.*:://;
+    if ( ref $self && exists $self->{$method} ) {
+        Class::XSAccessor->import(
+            accessors => { $method => $method },
+            class     => ref $self
+        );
+    }
+    else {
+        my $class = ref $self || $self;
+        die qq{Can't locate object method "$method" via package "$class"};
+    }
+    return $self->$method(@_);
 }
 
 sub DESTROY { } # because we AUTOLOAD, we need this too
@@ -96,7 +96,7 @@ sub DESTROY { } # because we AUTOLOAD, we need this too
   use Hash::Objectify;
 
   # turn a hash reference into an object with accessors
-  
+
   $object = objectify { foo => 'bar', wibble => 'wobble' };
   print $object->foo;
 
@@ -114,7 +114,7 @@ One application of this module could be to create lightweight response objects
 without the extra work of setting up an entire response class with the
 framework of your choice.
 
-Using <Hash::Objectify> is slower than accessing the keys of the hash directly, but
+Using Hash::Objectify is slower than accessing the keys of the hash directly, but
 does provide "typo protection" since a misspelled method is an error.
 
 =head1 USAGE
@@ -151,8 +151,8 @@ is true even for objects based on blessed hash references, since the correct
 semantics are not universally obvious.  If you really want Hash::Objectify for
 access to the keys of a blessed hash, you should make an explicit, shallow copy:
 
-  my $copy = objectified {%$object};
+  my $copy = objectify {%$object};
 
 =cut
 
-# vim: ts=2 sts=2 sw=2 et:
+# vim: ts=4 sts=4 sw=4 et:
