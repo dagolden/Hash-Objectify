@@ -37,7 +37,7 @@ sub import {
                 }
                 else {
                     my ( $caller, undef, $line ) = caller;
-                    my $cachekey = join "", keys %$ref;
+                    my $cachekey = join "", sort keys %$ref;
                     if ( !defined $CACHE{$caller}{$line}{$cachekey} ) {
                         no strict 'refs';
                         $package = $CACHE{$caller}{$line}{$cachekey} = "Hash::Objectified$COUNTER";
