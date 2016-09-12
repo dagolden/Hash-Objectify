@@ -2,6 +2,10 @@ Revision history for Hash-Objectify
 
 {{$NEXT}}
 
+    [Bug fixes]
+
+    - Fix fatal error calling 'can' on non-existent keys.
+
 0.002     2013-08-21 15:30:12 America/New_York
 
     - Fix documentation typos and tidy code

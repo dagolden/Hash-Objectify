@@ -32,6 +32,14 @@ like(
   "unknown accessor throws exception"
 );
 
+# 'can' shouldn't be fatal
+
+is(
+    exception { $obj->can( 'badkeydoesntexist' ) },
+    undef,
+    "calling 'can' on bad key isn't fatal"
+);
+
 # objectify class name test
 
 my $obj2 = objectify { foo => 'bar', baz => 'bam' };
