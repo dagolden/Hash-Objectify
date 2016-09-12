@@ -5,7 +5,8 @@ use warnings;
 package Hash::Objectify;
 
 # ABSTRACT: Create objects from hashes on the fly
-# VERSION
+
+our $VERSION = '0.003';
 
 use Carp;
 use Sub::Install;
