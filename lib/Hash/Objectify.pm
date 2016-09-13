@@ -65,7 +65,7 @@ our $AUTOLOAD;
 
 sub can {
     my ( $self, $key ) = @_;
-    return unless ref $self && exists $self->{$key};
+    return undef unless ref $self && exists $self->{$key}; ## no critic
     $self->$key; # install accessor if not installed
     return $self->SUPER::can($key);
 }
