@@ -6,7 +6,7 @@ package Hash::Objectify;
 
 # ABSTRACT: Create objects from hashes on the fly
 
-our $VERSION = '0.005';
+our $VERSION = '0.007';
 
 use Carp;
 use Sub::Install;
