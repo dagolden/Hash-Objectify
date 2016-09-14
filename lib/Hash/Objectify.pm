@@ -123,15 +123,16 @@ sub _handle_missing {
 
 =head1 DESCRIPTION
 
-Hash::Objectify turns a hash reference into a simple object with accessors for each
-of the keys.
+Hash::Objectify turns a hash reference into a simple object with accessors
+for each of the keys.
 
-One application of this module could be to create lightweight response objects
-without the extra work of setting up an entire response class with the
-framework of your choice.
+One application of this module could be to create lightweight response
+objects without the extra work of setting up an entire response class with
+the framework of your choice.
 
-Using Hash::Objectify is slower than accessing the keys of the hash directly, but
-does provide "typo protection" since a misspelled method is an error.
+Using Hash::Objectify is slower than accessing the keys of the hash
+directly, but does provide "typo protection" since a misspelled method is
+an error.
 
 =head1 USAGE
 
@@ -145,29 +146,31 @@ By default, the C<objectify> function is automatically exported.
   $object->$key;          # accessor
   $object->$key($value);  # mutator
 
-The C<objectify> function copies the hash reference (shallow copy), and blesses
-it into the given classname.  If no classname is given, a meaningless,
-generated package name is used instead.  In either case, the object will
-inherit from the Hash::Objectified class, which generates accessors on
-demand for any key in the hash.
+The C<objectify> function copies the hash reference (shallow copy), and
+blesses it into the given classname.  If no classname is given, a
+meaningless, generated package name is used instead.  In either case, the
+object will inherit from the Hash::Objectified class, which generates
+accessors on demand for any key in the hash.
 
 As an optimization, a generated classname will be the same for any given
 C<objectify> call if the keys of the input are the same.  (This avoids
 excessive accessor generation.)
 
-The first time a method is called on the object, an accessor will be dynamically
-generated if the key exists.  If the key does not exist, an exception is thrown.
-Note: deleting a key I<after> calling it as an accessor will not cause subsequent
-calls to throw an exception; the accessor will merely return undef.
+The first time a method is called on the object, an accessor will be
+dynamically generated if the key exists.  If the key does not exist, an
+exception is thrown.  Note: deleting a key I<after> calling it as an
+accessor will not cause subsequent calls to throw an exception; the
+accessor will merely return undef.
 
-Objectifying with a "real" classname that does anything other than inherit from
-Hash::Objectified may lead to surprising behaviors from method name conflict.  You
-probably don't want to do that.
+Objectifying with a "real" classname that does anything other than inherit
+from Hash::Objectified may lead to surprising behaviors from method name
+conflict.  You probably don't want to do that.
 
-Objectifying anything other than an unblessed hash reference is an error.  This
-is true even for objects based on blessed hash references, since the correct
-semantics are not universally obvious.  If you really want Hash::Objectify for
-access to the keys of a blessed hash, you should make an explicit, shallow copy:
+Objectifying anything other than an unblessed hash reference is an error.
+This is true even for objects based on blessed hash references, since the
+correct semantics are not universally obvious.  If you really want
+Hash::Objectify for access to the keys of a blessed hash, you should make
+an explicit, shallow copy:
 
   my $copy = objectify {%$object};
 
@@ -177,10 +180,17 @@ access to the keys of a blessed hash, you should make an explicit, shallow copy:
   $object->quux; # not fatal
 
 This works just like L</objectify>, except that non-existing keys return
-C<undef> instead of throwing exceptions.
+C<undef> instead of throwing exceptions.  Non-existing keys will still
+return C<undef> if checked with C<can>.
 
-If called with an existing package name, the behavior of accessors not yet
-called with change to become lax.  You probably don't want to do that.
+B<WARNING>: having an object that doesn't throw on unknown methods violates
+object-oriented behavior expectations so is generally a bad idea.  If you
+really feel you need this, be aware that the safety guard is removed and
+you might lose a finger.
+
+If called with an existing non-lax objectified package name, the behavior
+of accessors not yet called with change to become lax.  You probably don't
+want to do that.
 
 =head1 CAVEATS
 
@@ -189,9 +199,10 @@ resolvable methods (e.g. C<can>, C<AUTOLOAD>, C<DESTROY>), you won't be
 able to access those keys via a method as the existing methods take
 precedence.
 
-Specify custom package names or manipulating C<@ISA> for objectified
-packages is likely to lead to surprising behavior.  It's not recommended
-and not supported.  If it breaks, you get to keep both pieces.
+Specifying custom package names or manipulating C<@ISA> for objectified
+packages (including subclassing) is likely to lead to surprising behavior.
+It is not recommended and is not supported.  If it breaks, you get to keep
+the pieces.
 
 =cut
 
