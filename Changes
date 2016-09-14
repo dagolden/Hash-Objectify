@@ -2,6 +2,10 @@ Revision history for Hash-Objectify
 
 {{$NEXT}}
 
+    [Prereqs]
+
+    - Drops Sub::Install as a prerequisite.
+
 0.006     2016-09-12 21:21:35-04:00 America/New_York
 
     [Bug fixes]

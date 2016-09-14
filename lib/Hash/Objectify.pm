@@ -9,52 +9,43 @@ package Hash::Objectify;
 our $VERSION = '0.007';
 
 use Carp;
-use Sub::Install;
+use Exporter 5.57 'import';
 use Scalar::Util qw/blessed/;
+
+our @EXPORT = qw/objectify/;
 
 my %CACHE;
 my $COUNTER = 0;
 
-sub import {
-    my ($class) = @_;
-    my $caller = caller;
-
-    Sub::Install::install_sub(
-        {
-            code => sub {
-                my ( $ref, $package ) = @_;
-                my $type = ref $ref;
-                unless ( $type eq 'HASH' ) {
-                    $type =
-                        $type eq ''   ? "a scalar value"
-                      : blessed($ref) ? "an object of class $type"
-                      :                 "a reference of type $type";
-                    croak "Error: Can't objectify $type";
-                }
-                if ( defined $package ) {
-                    no strict 'refs';
-                    @{ $package . '::ISA' } = 'Hash::Objectified'
-                      unless $package->isa('Hash::Objectified');
-                }
-                else {
-                    my ( $caller, undef, $line ) = caller;
-                    my $cachekey = join "", sort keys %$ref;
-                    if ( !defined $CACHE{$caller}{$line}{$cachekey} ) {
-                        no strict 'refs';
-                        $package = $CACHE{$caller}{$line}{$cachekey} = "Hash::Objectified$COUNTER";
-                        $COUNTER++;
-                        @{ $package . '::ISA' } = 'Hash::Objectified';
-                    }
-                    else {
-                        $package = $CACHE{$caller}{$line}{$cachekey};
-                    }
-                }
-                bless {%$ref}, $package;
-            },
-            into => $caller,
-            as   => 'objectify',
+sub objectify {
+    my ( $ref, $package ) = @_;
+    my $type = ref $ref;
+    unless ( $type eq 'HASH' ) {
+        $type =
+            $type eq ''   ? "a scalar value"
+          : blessed($ref) ? "an object of class $type"
+          :                 "a reference of type $type";
+        croak "Error: Can't objectify $type";
+    }
+    if ( defined $package ) {
+        no strict 'refs';
+        @{ $package . '::ISA' } = 'Hash::Objectified'
+          unless $package->isa('Hash::Objectified');
+    }
+    else {
+        my ( $caller, undef, $line ) = caller;
+        my $cachekey = join "", sort keys %$ref;
+        if ( !defined $CACHE{$caller}{$line}{$cachekey} ) {
+            no strict 'refs';
+            $package = $CACHE{$caller}{$line}{$cachekey} = "Hash::Objectified$COUNTER";
+            $COUNTER++;
+            @{ $package . '::ISA' } = 'Hash::Objectified';
         }
-    );
+        else {
+            $package = $CACHE{$caller}{$line}{$cachekey};
+        }
+    }
+    return bless {%$ref}, $package;
 }
 
 package Hash::Objectified;
@@ -120,6 +111,8 @@ Using Hash::Objectify is slower than accessing the keys of the hash directly, bu
 does provide "typo protection" since a misspelled method is an error.
 
 =head1 USAGE
+
+By default, the C<objectify> function is automatically exported.
 
 =head2 objectify
 
