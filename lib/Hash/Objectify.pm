@@ -100,7 +100,7 @@ sub DESTROY { } # because we AUTOLOAD, we need this too
 package Hash::Objectified::Lax;
 
 sub _handle_missing {
-    return undef;
+    return undef; ## no critic
 }
 
 1;
