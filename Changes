@@ -2,6 +2,11 @@ Revision history for Hash-Objectify
 
 {{$NEXT}}
 
+    [Added]
+
+    - Adds 'objectify_lax' to create an object that returns undef instead
+      of throwing an exception for unknown methods.
+
     [Bug fixes]
 
     - Pushes Hash::Objectified onto supplied package name @ISA rather than

@@ -12,7 +12,8 @@ use Carp;
 use Exporter 5.57 'import';
 use Scalar::Util qw/blessed/;
 
-our @EXPORT = qw/objectify/;
+our @EXPORT    = qw/objectify/;
+our @EXPORT_OK = qw/objectify_lax/;
 
 my %CACHE;
 my $COUNTER = 0;
@@ -48,6 +49,17 @@ sub objectify {
     return bless {%$ref}, $package;
 }
 
+sub objectify_lax {
+    my ( $ref, $package ) = @_;
+    my $obj = objectify( $ref, $package );
+    $package ||= ref($obj);
+    {
+        no strict 'refs';
+        unshift @{ $package . '::ISA' }, 'Hash::Objectified::Lax';
+    }
+    return $obj;
+}
+
 package Hash::Objectified;
 
 use Class::XSAccessor;
@@ -70,15 +82,26 @@ sub AUTOLOAD {
             accessors => { $method => $method },
             class     => ref $self
         );
+        return $self->$method(@_);
     }
     else {
-        my $class = ref $self || $self;
-        die qq{Can't locate object method "$method" via package "$class"};
+        return $self->_handle_missing($method);
     }
-    return $self->$method(@_);
+}
+
+sub _handle_missing {
+    my ( $self, $method ) = @_;
+    my $class = ref $self || $self;
+    die qq{Can't locate object method "$method" via package "$class"};
 }
 
 sub DESTROY { } # because we AUTOLOAD, we need this too
+
+package Hash::Objectified::Lax;
+
+sub _handle_missing {
+    return undef;
+}
 
 1;
 
@@ -147,6 +170,17 @@ semantics are not universally obvious.  If you really want Hash::Objectify for
 access to the keys of a blessed hash, you should make an explicit, shallow copy:
 
   my $copy = objectify {%$object};
+
+=head2 objectify_lax
+
+  $object = objectify_lax { foo => 'bar' };
+  $object->quux; # not fatal
+
+This works just like L</objectify>, except that non-existing keys return
+C<undef> instead of throwing exceptions.
+
+If called with an existing package name, the behavior of accessors not yet
+called with change to become lax.  You probably don't want to do that.
 
 =cut
 

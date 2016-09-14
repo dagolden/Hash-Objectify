@@ -88,5 +88,17 @@ ok( my $obj8 = objectify($hash), "objectify HASHREF" );
 ok( !blessed $hash, "original HASHREF is not blessed" );
 is_deeply( $hash, $obj8, "original and object contents are same" );
 
+# test 'lax' mode
+{
+
+    package with::laxity;
+    use Test::More;
+    use Hash::Objectify qw/objectify_lax/;
+
+    my $obj = objectify_lax( { foo => 'bar' } );
+    is( $obj->foo,  'bar', "existing key works" );
+    is( $obj->quux, undef, "non-existing key returns undef" );
+}
+
 done_testing;
 # COPYRIGHT
