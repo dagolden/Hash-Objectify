@@ -29,7 +29,7 @@ sub objectify {
     }
     if ( defined $package ) {
         no strict 'refs';
-        @{ $package . '::ISA' } = 'Hash::Objectified'
+        push @{ $package . '::ISA' }, 'Hash::Objectified'
           unless $package->isa('Hash::Objectified');
     }
     else {
