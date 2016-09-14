@@ -6,7 +6,7 @@ package Hash::Objectify;
 
 # ABSTRACT: Create objects from hashes on the fly
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
 use Carp;
 use Exporter 5.57 'import';
