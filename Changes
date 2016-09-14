@@ -12,6 +12,10 @@ Revision history for Hash-Objectify
     - Pushes Hash::Objectified onto supplied package name @ISA rather than
       replacing @ISA.
 
+    [Docs]
+
+    - Added CAVEATS section.
+
     [Prereqs]
 
     - Drops Sub::Install as a prerequisite.

@@ -182,6 +182,17 @@ C<undef> instead of throwing exceptions.
 If called with an existing package name, the behavior of accessors not yet
 called with change to become lax.  You probably don't want to do that.
 
+=head1 CAVEATS
+
+If an objectified hashref contains keys that conflict with existing
+resolvable methods (e.g. C<can>, C<AUTOLOAD>, C<DESTROY>), you won't be
+able to access those keys via a method as the existing methods take
+precedence.
+
+Specify custom package names or manipulating C<@ISA> for objectified
+packages is likely to lead to surprising behavior.  It's not recommended
+and not supported.  If it breaks, you get to keep both pieces.
+
 =cut
 
 # vim: ts=4 sts=4 sw=4 et:
